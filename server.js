@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000
 const MONGO_URI = process.env.MONGO_URI
 
 app.use(cors({
-    origin : [process.env.CLIENT_URL , PRODUCTION_CLIENT_URL],
+    origin : [process.env.CLIENT_URL , process.env.PRODUCTION_CLIENT_URL],
     methods : ["PUT", "DELETE" , "POST", "GET"],
     allowedHeaders : ["Content-Type" , "Authorization"],
     credentials : true
