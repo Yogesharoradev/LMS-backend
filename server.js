@@ -17,6 +17,7 @@ const app = express()
 const PORT = process.env.PORT || 5000
 const MONGO_URI = process.env.MONGO_URI
 
+
 app.use(cors({
     origin : [process.env.CLIENT_URL , process.env.PRODUCTION_CLIENT_URL],
     methods : ["PUT", "DELETE" , "POST", "GET"],

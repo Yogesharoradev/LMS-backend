@@ -4,8 +4,6 @@ import Orders from "../models/order.js"
 import StudentCourses from "../models/studentCourses.model.js"
 
 
-
-
 export const createOrder = async(req,res)=>{
     try{    
         const {
@@ -34,14 +32,14 @@ export const createOrder = async(req,res)=>{
                     payment_method : "paypal"
                 },
                 redirect_urls : {
-                    return_url : `${process.env.PRODUCTION_CLIENT_URL}/payment-return` ,
+                    return_url : `${process.env.CLIENT_URL}/payment-return` ,
                     cancel_url : `${process.env.PRODUCTION_CLIENT_URL}/payment-cancel`
                 },
                 transactions :[
                     {
                         item_list : {
                             items : [
-                                {
+                                { 
                                     name: courseTitle , 
                                     sku : courseId , 
                                     price : coursePricing,
@@ -128,17 +126,19 @@ export const CapturePayment = async(req,res)=>{
                 userId : order.userId
             })
 
-            if(studentCourse){
-                studentCourse.courses.push({
-                    courseId :  order.courseId,
-                    title : order.courseTitle,
-                    instructorId : order.instructorId,
-                    instructorName : order.instructorName,
-                    dateOfPurchase : order.orderDate,
-                    courseImage : order.courseImage
-                })
-
-                await studentCourse.save()
+            if (studentCourse) {
+                const courseExists = studentCourse.courses.some(course => course.courseId === order.courseId);
+                if (!courseExists) {
+                    studentCourse.courses.push({
+                        courseId: order.courseId,
+                        title: order.courseTitle,
+                        instructorId: order.instructorId,
+                        instructorName: order.instructorName,
+                        dateOfPurchase: order.orderDate,
+                        courseImage: order.courseImage
+                    });
+                    await studentCourse.save();
+                }
             }else{
                 const newStudentCourses = new StudentCourses({
                     userId : order.userId,
